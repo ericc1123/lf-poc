@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lead Capture Form</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{
+  --primary:#004c97;
+  --secondary:#f4f4f4;
+  --accent:#0088cc;
+  --danger:#d9534f;
+  --radius:4px;
+  font-size:16px;
+}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  margin:0;
+  padding:2rem;
+  background:var(--secondary);
+  color:#333;
+}
+h1{
+  text-align:center;
+  color:var(--primary);
+}
+form{
+  max-width:700px;
+  margin:0 auto;
+  background:#fff;
+  padding:2rem;
+  border-radius:var(--radius);
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+}
+label{
+  display:block;
+  margin:.75rem 0 .25rem;
+  font-weight:bold;
+}
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select,
+textarea{
+  width:100%;
+  padding:.5rem .75rem;
+  border:1px solid #ccc;
+  border-radius:var(--radius);
+  box-sizing:border-box;
+}
+textarea{
+  resize:vertical;
+  min-height:80px;
+}
+.checkbox-group{
+  display:flex;
+  flex-wrap:wrap;
+  gap:1rem;
+}
+.checkbox-group label{
+  font-weight:normal;
+  display:flex;
+  align-items:center;
+}
+.checkbox-group input{
+  margin-right:.25rem;
+}
+button{
+  display:inline-block;
+  background:var(--primary);
+  color:#fff;
+  border:none;
+  padding:.75rem 1.5rem;
+  border-radius:var(--radius);
+  cursor:pointer;
+  font-size:1rem;
+  margin-top:1rem;
+}
+button:hover{
+  background:var(--accent);
+}
+</style>
+</head>
+<body>
+<h1>Lead Capture Form</h1>
+
+<form id="leadForm">
+  <label for="firstName">First Name</label>
+  <input type="text" id="firstName" name="firstName" required>
+
+  <label for="lastName">Last Name</label>
+  <input type="text" id="lastName" name="lastName" required>
+
+  <label for="phone">Phone Number</label>
+  <input type="tel" id="phone" name="phone">
+
+  <label for="email">Email Address</label>
+  <input type="email" id="email" name="email" required>
+
+  <label for="company">Company Name</label>
+  <input type="text" id="company" name="company">
+
+  <label for="employeeCount">Employee Count</label>
+  <input type="text" id="employeeCount" name="employeeCount">
+
+  <label for="jobTitle">Job Title</label>
+  <input type="text" id="jobTitle" name="jobTitle">
+
+  <label>Check all that apply</label>
+  <div class="checkbox-group">
+    <label><input type="checkbox" name="tags" value="Primary Decision Maker">Primary Decision&nbsp;Maker</label>
+    <label><input type="checkbox" name="tags" value="Part of Decision Team">Part of decision-making team</label>
+    <label><input type="checkbox" name="tags" value="Help Building Case">Wants help building the case</label>
+    <label><input type="checkbox" name="tags" value="Fan">Fan</label>
+  </div>
+
+  <label for="otherContact">Is there someone else in your organization we should talk to? (Provide name &amp; contact info)</label>
+  <textarea id="otherContact" name="otherContact"></textarea>
+
+  <label for="notes">Any additional notes or comments</label>
+  <textarea id="notes" name="notes"></textarea>
+
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+// Save form data to localStorage and redirect to thank-you page
+document.getElementById('leadForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const data = new FormData(e.target);
+  const lead = {};
+  data.forEach((value, key) => {
+    if(key === 'tags'){
+      if(!lead[key]) lead[key] = [];
+      lead[key].push(value);
+    } else {
+      lead[key] = value.trim();
+    }
+  });
+  lead.timestamp = new Date().toISOString();
+  const leads = JSON.parse(localStorage.getItem('leads') || '[]');
+  leads.push(lead);
+  localStorage.setItem('leads', JSON.stringify(leads));
+  e.target.reset();
+  window.location.href='thanks.html';
+});
+</script>
+</body>
+</html>
